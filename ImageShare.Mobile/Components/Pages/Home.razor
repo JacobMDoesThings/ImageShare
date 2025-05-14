@@ -1,0 +1,78 @@
+﻿@page "/"
+@inject IFileUploadService FileUploadService
+
+@using ImageShare.ImageBlobService
+
+<h3>Upload File</h3>
+
+<InputFile OnChange="HandleFileSelected" />
+<FluentCheckbox @bind-value="@_isPublic">Public</FluentCheckbox>
+@_isPublic
+
+
+@code {
+    private bool _isPublic = false;
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        try
+        {
+            var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // Allow up to ~10MB files
+            var success = await FileUploadService.UploadImageAsync(stream, _isPublic);
+
+            Console.WriteLine(success ? "Upload successful!" : "Upload failed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error uploading file: {ex.Message}");
+        }
+    }
+        // var file = e.File;
+        // if (file == null) return;
+        //
+        // // Step 1: Get SAS token from backend
+        // var client = HttpClientFactory.CreateClient("SasService");
+        // var response = await client.GetAsync("/api/sas/generate");
+        // if (!response.IsSuccessStatusCode) return;
+        // Console.WriteLine("Success");
+        // var result = await response.Content.ReadFromJsonAsync<dynamic>();
+        // try
+        // {
+        //     Console.WriteLine("Presas");
+        //     JsonNode node = JsonNode.Parse(result?.ToString()); 
+        //     sasUrl = node["sasUrl"]?.GetValue<string>() ?? string.Empty;
+        //     //sasUrl = result?.sasUrl ?? string.Empty;
+        //     Console.WriteLine($"post sasURL:{sasUrl}");
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine(ex);
+        //     throw;
+        // }
+        //
+        //
+        // // Step 2: Upload file using SAS URL
+        // try
+        // {
+        //     // var content = new StreamContent(file.OpenReadStream(maxAllowedSize:1024*1024*10));
+        //     // content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+        //     var blobHttpHeader = new BlobHttpHeaders { ContentType = "image/jpeg" };
+        //     var blobClient = new BlobClient(new Uri(sasUrl));
+        //     await blobClient.UploadAsync(file.OpenReadStream(maxAllowedSize:1024*1024*10), blobHttpHeader);
+        //    
+        //
+        //     //var uploadedBlob = await blob.UploadAsync(YOURSTREAM, new BlobUploadOptions { HttpHeaders = blobHttpHeader });
+        //     //var uploadResponse = await new HttpClient().PutAsync(sasUrl, content);
+        //     // if (uploadResponse.IsSuccessStatusCode)
+        //     // {
+        //     //     Console.WriteLine("Upload successful!");
+        //     // }
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine(ex);
+        // }
+        //
+        //
+    }
+}
