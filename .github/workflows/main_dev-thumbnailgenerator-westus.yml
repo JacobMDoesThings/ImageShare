@@ -8,9 +8,9 @@ on:
 
 env:
   # 🔧 Set this to the path of your Azure Function App project folder relative to repo root
-  AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/ImageShare.Functions.csproj' 
+  AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/' # 📁 Directory path
   # 🧩 Set this to the path where binaries will be published (output folder)
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ThumbnailGeneratorFunction/output'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ImageShare.Functions/output'
   DOTNET_VERSION: '8.0.x' # 🔧 Set your target .NET version
 
 jobs:
@@ -35,21 +35,19 @@ jobs:
       - name: 'Build Azure Function App'
         shell: pwsh
         run: |
-          # Navigate to the Function App project directory
           pushd './${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}'
           
-          # Build ONLY the Function App project
-          dotnet build --configuration Release --output ./output
+          # Build the Function App project file explicitly
+          dotnet build './ImageShare.Functions.csproj' --configuration Release --output ./output
 
-          # Return to root directory
           popd
-
+      
       # 🔐 Step 4: Login to Azure via Federated Identity/User-Assigned Identity
       - name: 'Login to Azure'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_23C60DC84FED4D1E81D6AFC0533495E9 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_667F4BEEDFDD44CCBB82F7A5FB3E3750 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_66,7F4BEEDFDD44CCBB82F7A5FB3E3750 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DD79C56BEF6E47A4A0E6957857B3ADB2 }}
 
       # 🚀 Step 5: Deploy Azure Function App
