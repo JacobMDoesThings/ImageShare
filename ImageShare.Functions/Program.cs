@@ -45,7 +45,6 @@ var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder.AddCon
 // Register ILogger<T> via factory
 builder.Services.AddSingleton(loggerFactory.CreateLogger<ThumbnailGenerationFunction>());
 
-
 builder.Services.AddSingleton<ThumbnailGenerationConfiguration>(sp => new ThumbnailGenerationConfiguration(){
     ConnectionString = thumbnailConfig.ConnectionString,
     JpegQuality = thumbnailConfig.JpegQuality,
@@ -55,6 +54,7 @@ builder.Services.AddSingleton<ThumbnailGenerationConfiguration>(sp => new Thumbn
     ThumbnailPathPublic = thumbnailConfig.ThumbnailPathPublic
 });
 
+builder.Services.AddSingleton<IImageProcessingService, ImageProcessingService>();
 
 
 // Configure web app (required for isolated worker)

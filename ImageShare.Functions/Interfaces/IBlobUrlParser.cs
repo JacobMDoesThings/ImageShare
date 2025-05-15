@@ -4,5 +4,5 @@ namespace ImageShare.Functions.Interfaces;
 
 public interface IBlobUrlParser
 {
-    BlobData ParseBlob(Uri blobUrl);
+    public BlobData ParseBlob(Uri blobUrl);
 }
