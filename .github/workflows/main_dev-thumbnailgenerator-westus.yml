@@ -10,10 +10,13 @@ on:
   workflow_dispatch:
 
 env:
-
+  AZURE_FUNCTIONAPP_NAME: 'dev-thumbnailgenerator-westus' # Your Function App name
+  AZURE_RESOURCE_GROUP: 'YOUR_RESOURCE_GROUP_NAME'       # ❗ IMPORTANT: Set your Function App's Resource Group Name
   AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/' # 📁 Directory path
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ImageShare.Functions/output'  
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ImageShare.Functions/output'
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
+  TEMP_IP_RULE_NAME: 'GitHubActionsRunnerTempIP' # Name for the temporary IP restriction rule
+  TEMP_IP_RULE_PRIORITY: 150 # Priority for the temporary rule (lower numbers are higher precedence)
 
 jobs:
   build-and-deploy:
@@ -31,16 +34,13 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Step 3: Build Azure Function App
       - name: 'Build Azure Function App'
         shell: pwsh
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}'
-          
-          # Build ONLY the Function App project file directly
           dotnet build './ImageShare.Functions.csproj' --configuration Release --output ./output
           popd
-          
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -48,11 +48,48 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_204DE3FEBB3042D59467DF29DB1BB506 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_50D1C8A7BD2E41BBA03BCDCEB789BAE2 }}
 
+      - name: Get Runner Public IP
+        id: runner_ip
+        shell: pwsh
+        run: |
+          $ip = (Invoke-RestMethod -Uri "https://api.ipify.org").Trim()
+          Write-Output "Runner IP: $ip"
+          echo "RUNNER_IP=$ip" >> $env:GITHUB_OUTPUT
+
+      - name: Add Runner IP to Azure Function App SCM Allow List
+        if: steps.runner_ip.outputs.RUNNER_IP # Only run if IP was successfully fetched
+        shell: pwsh
+        run: |
+          Write-Host "Adding IP ${{ steps.runner_ip.outputs.RUNNER_IP }} to SCM allow list for ${{ env.AZURE_FUNCTIONAPP_NAME }}"
+          az functionapp config access-restriction add `
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} `
+            --name ${{ env.AZURE_FUNCTIONAPP_NAME }} `
+            --rule-name ${{ env.TEMP_IP_RULE_NAME }} `
+            --action Allow `
+            --ip-address "${{ steps.runner_ip.outputs.RUNNER_IP }}/32" `
+            --priority ${{ env.TEMP_IP_RULE_PRIORITY }} `
+            --scm-site $true `
+            --description "Temporary allow for GitHub Actions runner"
+          Write-Host "IP ${{ steps.runner_ip.outputs.RUNNER_IP }} added."
+        continue-on-error: false # Fail the job if we can't add the IP
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'dev-thumbnailgenerator-westus'
-          slot-name: 'Production'
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          slot-name: 'Production' # Or your specific slot
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          
+
+      - name: Remove Runner IP from Azure Function App SCM Allow List
+        if: always() && steps.runner_ip.outputs.RUNNER_IP # Always run this step to clean up, if IP was fetched
+        shell: pwsh
+        run: |
+          Write-Host "Attempting to remove IP rule '${{ env.TEMP_IP_RULE_NAME }}' from SCM allow list for ${{ env.AZURE_FUNCTIONAPP_NAME }}"
+          az functionapp config access-restriction remove `
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} `
+            --name ${{ env.AZURE_FUNCTIONAPP_NAME }} `
+            --rule-name ${{ env.TEMP_IP_RULE_NAME }} `
+            --scm-site $true
+          Write-Host "IP rule removal command executed. Check Azure portal to confirm if rule existed and was removed."
+        continue-on-error: true # Allow workflow to succeed even if removal has issues (e.g., rule already gone)
