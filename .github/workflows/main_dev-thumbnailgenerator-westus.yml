@@ -48,9 +48,9 @@ jobs:
       - name: 'Login to Azure'
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2EC6E072B03C4A509AD9E6016C14642A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A2392F6DD8C,41A299F44349CBD11DD7 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BBEEC77AAD3C4DBF926031A6C2D026A8 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_23C60DC84FED4D1E81D6AFC0533495E9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_667F4BEEDFDD44CCBB82F7A5FB3E3750 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DD79C56BEF6E47A4A0E6957857B3ADB2 }}
 
       # 🚀 Step 5: Deploy Azure Function App
       - name: 'Deploy Azure Function App'
