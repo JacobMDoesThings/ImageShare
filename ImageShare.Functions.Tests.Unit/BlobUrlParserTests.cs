@@ -19,8 +19,9 @@ public class BlobUrlParserTests
         const string container = "container-name";
         const string user = "user-name";
         const string name = "file-name";
-        var publicPath = $"https://account.dfs.core.windows.net/{container}/public/images/{user}/{name}";
-        var privatePath = $"https://account.dfs.core.windows.net/{container}/{user}/images/{name}";
+        const string publicPath = $"https://account.dfs.core.windows.net/{container}/public/images/{user}/{name}";
+        const string privatePath = $"https://account.dfs.core.windows.net/{container}/{user}/images/{name}";
+        
         var pubExpectedBlobData = new BlobData
         {
             BlobUrlString = $"/public/images/{user}/{name}",

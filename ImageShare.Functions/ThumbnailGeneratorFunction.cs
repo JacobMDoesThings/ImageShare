@@ -2,12 +2,12 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Azure.Messaging.EventGrid;
-using ImageShare.Functions.Services;
+using ImageShare.Functions.Interfaces;
 
 namespace ImageShare.Functions;
 
 public class ThumbnailGenerationFunction(
-    ImageProcessingService imageProcessingService, ILogger<ThumbnailGenerationFunction> logger)
+    IImageProcessingService imageProcessingService, ILogger<ThumbnailGenerationFunction> logger)
 {
     [Function("EventGridThumbnailGenerator")]
     public async Task Run(
