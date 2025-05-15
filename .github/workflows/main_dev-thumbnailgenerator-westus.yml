@@ -8,7 +8,7 @@ on:
 
 env:
   # 🔧 Set this to the path of your Azure Function App project folder relative to repo root
-  AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/ThumbnailGeneratorFunction.csproj' 
+  AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/ImageShare.Functions.csproj' 
   # 🧩 Set this to the path where binaries will be published (output folder)
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ThumbnailGeneratorFunction/output'
   DOTNET_VERSION: '8.0.x' # 🔧 Set your target .NET version
