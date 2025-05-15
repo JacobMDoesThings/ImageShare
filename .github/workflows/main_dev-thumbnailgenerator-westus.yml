@@ -10,7 +10,9 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+
+  AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/' # 📁 Directory path
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ImageShare.Functions/output'  
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
@@ -35,7 +37,17 @@ jobs:
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
           popd
-      
+
+      # Step 3: Build Azure Function App
+      - name: 'Build Azure Function App'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}'
+          
+          # Build ONLY the Function App project file directly
+          dotnet build './ImageShare.Functions.csproj' --configuration Release --output ./output
+          popd
+          
       - name: Login to Azure
         uses: azure/login@v2
         with:
