@@ -7,54 +7,51 @@ on:
   workflow_dispatch:
 
 env:
-  # 🔧 Set this to the path of your Azure Function App project folder relative to repo root
   AZURE_FUNCTIONAPP_PROJECT_PATH: 'ImageShare.Functions/' # 📁 Directory path
-  # 🧩 Set this to the path where binaries will be published (output folder)
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'ImageShare.Functions/output'
-  DOTNET_VERSION: '8.0.x' # 🔧 Set your target .NET version
+  DOTNET_VERSION: '8.0.x'
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
     permissions:
-      id-token: write # Required for federated identity (if enabled)
+      id-token: write
       contents: read
 
     steps:
-      # 🧾 Step 1: Checkout repository code
+      # Step 1: Checkout repository code
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
 
-      # 🛠️ Step 2: Setup .NET SDK
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      # Step 2: Setup .NET SDK
+      - name: Setup DotNet Environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # 🧪 Step 3: Build ONLY the Azure Function App project
+      # Step 3: Build Azure Function App
       - name: 'Build Azure Function App'
         shell: pwsh
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}'
           
-          # Build the Function App project file explicitly
+          # Build ONLY the Function App project file directly
           dotnet build './ImageShare.Functions.csproj' --configuration Release --output ./output
 
           popd
       
-      # 🔐 Step 4: Login to Azure via Federated Identity/User-Assigned Identity
+      # Step 4: Login to Azure
       - name: 'Login to Azure'
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2EC6E072B03C4A509AD9E6016C14642A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A2392F6DD8C441A299F44349CBD11DD7 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BBEEC77AAD3C4DBF926031A6C2D026A8 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_23C60DC84FED4D1E81D6AFC0533495E9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_667F4BEEDFDD44CCBB82F7A5FB3E3750 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DD79C56BEF6E47A4A0E6957857B3ADB2 }}
 
-
-      # 🚀 Step 5: Deploy Azure Function App
+      # Step 5: Deploy Azure Function App
       - name: 'Deploy Azure Function App'
         uses: Azure/functions-action@v1
         with:
           app-name: 'dev-thumbnailgenerator-westus'
           slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}' # Path to published binaries
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
