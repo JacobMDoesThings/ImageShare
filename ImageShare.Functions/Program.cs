@@ -63,7 +63,7 @@ using Microsoft.Extensions.Logging;
 var builder = FunctionsApplication.CreateBuilder(args);
 
 // Configure configuration sources dynamically based on environment
-var config = new ConfigurationBuilder()
+var config = builder.Configuration
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddUserSecrets<Program>(optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
