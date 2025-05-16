@@ -7,65 +7,38 @@ using ImageShare.Functions.Interfaces;
 namespace ImageShare.Functions;
 
 public class ThumbnailGenerationFunction(
-    IImageProcessingService imageProcessingService, 
+    IImageProcessingService imageProcessingService,
     ILogger<ThumbnailGenerationFunction> logger)
 {
     [Function("EventGridThumbnailGenerator")]
     public async Task Run(
-        [EventGridTrigger] EventGridEvent[] events,
+        [EventGridTrigger] EventGridEvent gridEvent,
         FunctionContext context)
     {
         logger.LogInformation("Processing Event Grid event");
 
-        foreach (var eventGridEvent in events)
+        logger.LogInformation("Received event type: {EventType}", gridEvent.EventType);
+
+
+        // Handle blob events
+        if (gridEvent.EventType.Equals("Microsoft.Storage.BlobCreated"))
         {
-            logger.LogInformation("Received event type: {EventType}", eventGridEvent.EventType);
-
-            switch (eventGridEvent.EventType)
+            try
             {
-                // Handle subscription validation events
-                case "Microsoft.EventGrid.SubscriptionValidationEvent":
+                var blobData = JsonDocument.Parse(gridEvent.Data.ToString());
+                var blobUrl = blobData.RootElement.GetProperty("url").GetString();
+
+                logger.LogInformation("Processing blob URL: {BlobUrl}", blobUrl);
+
+                if (blobUrl is not null)
                 {
-                    logger.LogInformation("Handling subscription validation event");
-
-                    // Parse validation data
-                    var validationEvent = JsonDocument.Parse(eventGridEvent.Data.ToString());
-                    var validationCode = validationEvent.RootElement.GetProperty("validationCode").GetString();
-
-                    logger.LogInformation("Validation code received: {ValidationCode}", validationCode);
-
-                    // Respond with HTTP 200 OK and validationResponse matching Azure's challenge
-                    var response = new 
-                    {
-                        validationResponse = validationCode
-                    };
-
-                    logger.LogInformation("Responding to subscription validation");
-                    return;
+                    await imageProcessingService.ProcessImageAsync(new Uri(blobUrl));
                 }
-                // Handle blob events
-                case "Microsoft.Storage.BlobCreated":
-                    try
-                    {
-                        var blobData = JsonDocument.Parse(eventGridEvent.Data.ToString());
-                        var blobUrl = blobData.RootElement.GetProperty("url").GetString();
-
-                        logger.LogInformation("Processing blob URL: {BlobUrl}", blobUrl);
-
-                        if (blobUrl is not null)
-                        {
-                            await imageProcessingService.ProcessImageAsync(new Uri(blobUrl));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Error processing blob event");
-                    }
-
-                    break;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error processing blob event");
             }
         }
-
-        logger.LogInformation("No events processed.");
     }
 }
