@@ -80,11 +80,11 @@ if (!Validator.TryValidateObject(thumbnailConfig, new ValidationContext(thumbnai
 {
     var errors = string.Join("\n", validationResults.Select(r => r.ErrorMessage));
     throw new InvalidOperationException($"Configuration validation failed:\n{errors} \n" +
-                                        $"{nameof(thumbnailConfig.ThumbnailPathPublic)}:{thumbnailConfig.ThumbnailPathPublic}\n" +
-                                        $"{nameof(thumbnailConfig.ThumbnailPathPrivate)}:{thumbnailConfig.ThumbnailPathPrivate} \n" +
+                                        $"{nameof(thumbnailConfig.ThumbnailPathPublic)}:{thumbnailConfig.ThumbnailPathPublic ?? string.Empty}\n" +
+                                        $"{nameof(thumbnailConfig.ThumbnailPathPrivate)}:{thumbnailConfig.ThumbnailPathPrivate ?? string.Empty} \n" +
                                         $"{nameof(thumbnailConfig.MaxHeight)}:{thumbnailConfig.MaxHeight}" +
                                         $"{nameof(thumbnailConfig.JpegQuality)}:{thumbnailConfig.JpegQuality} \n" +
-                                        $"{nameof(thumbnailConfig.AllowedMimeTypes)}:{thumbnailConfig.AllowedMimeTypes.Length} \n");
+                                        $"{nameof(thumbnailConfig.AllowedMimeTypes)}:{thumbnailConfig.AllowedMimeTypes?.Length} \n");
 
 }
 
