@@ -78,8 +78,8 @@ if (thumbnailConfig == null)
 var validationResults = new List<ValidationResult>();
 if (!Validator.TryValidateObject(thumbnailConfig, new ValidationContext(thumbnailConfig), validationResults, true))
 {
-    var errors = string.Join("\n", validationResults.Select(r => r.ErrorMessage));
-    throw new InvalidOperationException($"Configuration validation failed:\n{errors}");
+    var errors = string.Join("-", validationResults.Select(r => r.ErrorMessage));
+    throw new InvalidOperationException($"Configuration Error: {errors}");
 }
 
 // Register services
