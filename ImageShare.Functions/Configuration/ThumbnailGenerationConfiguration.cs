@@ -16,10 +16,10 @@ public class ThumbnailGenerationConfiguration
     public required string[] AllowedMimeTypes { get; init; }
 
     [Required(ErrorMessage = "Thumbnail Path Public required")]
-    public string ThumbnailPathPublic { get; init; } = "public/thumbs";
+    public required string ThumbnailPathPublic { get; init; }
     
     [Required(ErrorMessage = "Thumbnail Path Private required")]
-    public string ThumbnailPathPrivate { get; init; } = "{user}/thumbs";
+    public required string ThumbnailPathPrivate { get; init; }
     
     [Required(ErrorMessage = "ConnectionString required")]
     public required string ConnectionString { get; init; }
