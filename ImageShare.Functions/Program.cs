@@ -79,7 +79,13 @@ var validationResults = new List<ValidationResult>();
 if (!Validator.TryValidateObject(thumbnailConfig, new ValidationContext(thumbnailConfig), validationResults, true))
 {
     var errors = string.Join("\n", validationResults.Select(r => r.ErrorMessage));
-    throw new InvalidOperationException($"Configuration validation failed:\n{errors}");
+    throw new InvalidOperationException($"Configuration validation failed:\n{errors} \n" +
+                                        $"{nameof(thumbnailConfig.ThumbnailPathPublic)}:{thumbnailConfig.ThumbnailPathPublic}\n" +
+                                        $"{nameof(thumbnailConfig.ThumbnailPathPrivate)}:{thumbnailConfig.ThumbnailPathPrivate} \n" +
+                                        $"{nameof(thumbnailConfig.MaxHeight)}:{thumbnailConfig.MaxHeight}" +
+                                        $"{nameof(thumbnailConfig.JpegQuality)}:{thumbnailConfig.JpegQuality} \n" +
+                                        $"{nameof(thumbnailConfig.AllowedMimeTypes)}:{thumbnailConfig.AllowedMimeTypes.Length} \n");
+
 }
 
 // Register services
