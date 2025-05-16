@@ -4,23 +4,23 @@ namespace ImageShare.Functions.Configuration;
 
 public class ThumbnailGenerationConfiguration
 {
-    [Required]
-    [Range(1, 2048)]
+    [Required (ErrorMessage = "Max Height required")]
+    [Range(1, 2048,  ErrorMessage = "Max Height must be between 1 and 2048")]
     public int MaxHeight { get; init; }
 
-    [Required]
-    [Range(1, 100)]
+    [Required(ErrorMessage = "Max Width required")]
+    [Range(1, 100,   ErrorMessage = "Max Width must be between 1 and 100")]
     public int JpegQuality { get; init; }
 
-    [Required]
+    [Required(ErrorMessage = "Must include Allowed Mime Types")]
     public required string[] AllowedMimeTypes { get; init; }
 
-    [Required]
+    [Required(ErrorMessage = "Thumbnail Path Public required")]
     public string ThumbnailPathPublic { get; init; } = "public/thumbs";
     
-    [Required]
+    [Required(ErrorMessage = "Thumbnail Path Private required")]
     public string ThumbnailPathPrivate { get; init; } = "{user}/thumbs";
     
-    [Required]
+    [Required(ErrorMessage = "ConnectionString required")]
     public required string ConnectionString { get; init; }
 }
