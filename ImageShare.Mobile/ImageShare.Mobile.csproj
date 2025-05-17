@@ -68,7 +68,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ImageShare.ImageBlobService\ImageShare.ImageBlobService.csproj" />
+      <ProjectReference Include="..\ImageShare.Shared.Services\ImageShare.Shared.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>

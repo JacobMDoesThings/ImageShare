@@ -1,6 +1,6 @@
-﻿using ImageShare.ImageBlobService;
+﻿using ImageShare.Shared.Services.BlobService;
+using ImageShare.Shared.Services.BlobService.Configuration;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace ImageShare.Mobile;

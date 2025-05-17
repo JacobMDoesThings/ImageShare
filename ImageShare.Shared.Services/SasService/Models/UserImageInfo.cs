@@ -1,4 +1,4 @@
-namespace ImageShare.WebApi.Data;
+namespace ImageShare.Shared.Services.SasService.Models;
 
 public class UserImageInfo
 {

@@ -1,4 +1,4 @@
-namespace ImageShare.WebApi.Configuration;
+namespace ImageShare.Shared.Services.SasService.Configuration;
 
 public class AzureStorageConfiguration
 {

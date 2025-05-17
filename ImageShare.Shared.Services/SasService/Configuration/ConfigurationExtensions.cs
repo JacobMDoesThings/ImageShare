@@ -1,4 +1,7 @@
-namespace ImageShare.WebApi.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ImageShare.Shared.Services.SasService.Configuration;
 
 public static class ConfigurationExtensions
 {

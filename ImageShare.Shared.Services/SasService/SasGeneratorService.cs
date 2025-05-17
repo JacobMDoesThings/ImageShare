@@ -2,10 +2,10 @@ using Azure;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
-using ImageShare.WebApi.Configuration;
-using ImageShare.WebApi.Data;
+using ImageShare.Shared.Services.SasService.Configuration;
+using ImageShare.Shared.Services.SasService.Models;
 
-namespace ImageShare.WebApi.Services;
+namespace ImageShare.Shared.Services.SasService;
 
 public class SasGeneratorService(AzureStorageConfiguration azStConfiguration) : ISasGeneratorService
 

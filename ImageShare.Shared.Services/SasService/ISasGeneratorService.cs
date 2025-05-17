@@ -1,7 +1,6 @@
-using ImageShare.WebApi.Configuration;
-using ImageShare.WebApi.Data;
+using ImageShare.Shared.Services.SasService.Models;
 
-namespace ImageShare.WebApi.Services;
+namespace ImageShare.Shared.Services.SasService;
 
 public interface ISasGeneratorService
 {

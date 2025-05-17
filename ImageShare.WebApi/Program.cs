@@ -1,6 +1,8 @@
-using ImageShare.WebApi.Configuration;
-using ImageShare.WebApi.Services;
 
+
+
+using ImageShare.Shared.Services.SasService;
+using ImageShare.Shared.Services.SasService.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

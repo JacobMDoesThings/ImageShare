@@ -1,4 +1,4 @@
-namespace ImageShare.ImageBlobService;
+namespace ImageShare.Shared.Services.BlobService;
 
 public interface IFileUploadService
 {

@@ -1,4 +1,4 @@
-namespace ImageShare.ImageBlobService;
+namespace ImageShare.Shared.Services.BlobService.Configuration;
 
 public class BlobServiceConfiguration
 {

@@ -2,8 +2,9 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using ImageShare.Shared.Services.BlobService.Configuration;
 
-namespace ImageShare.ImageBlobService;
+namespace ImageShare.Shared.Services.BlobService;
 
 public class FileUploadService : IFileUploadService
 {

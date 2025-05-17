@@ -1,9 +1,8 @@
-using ImageShare.WebApi.Data;
-using ImageShare.WebApi.Services;
+using ImageShare.Shared.Services.SasService;
+using ImageShare.Shared.Services.SasService.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ImageShare.WebApi;
-
-using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
