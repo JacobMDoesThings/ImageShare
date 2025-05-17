@@ -18,8 +18,6 @@ public static class ConfigurationExtensions
         if (string.IsNullOrEmpty(azureConfig?.AccountKey))
             throw new InvalidOperationException("Azure Storage AccountKey is required.");
         
-        if (string.IsNullOrEmpty(azureConfig?.MainContainerName))
-            throw new InvalidOperationException("Main Container Name is required.");
         services.AddSingleton(azureConfig);
     }
 }

@@ -19,7 +19,8 @@ public class FileUploadService : IFileUploadService
 
     public async Task<bool> UploadImageAsync(Stream fileStream, bool isPublic = false)
     {
-        var urlWithParams = $"{_blobServiceConfiguration.SasEndPoint}?isPublic={isPublic}";
+        var groupId = "groupid1";
+        var urlWithParams = $"{_blobServiceConfiguration.SasEndPoint}?selectedGroupId={groupId}&isPublic={isPublic}";
         var response = await _sasServiceClient.GetAsync(urlWithParams);
         if (!response.IsSuccessStatusCode) return false;
         var result = await response.Content.ReadFromJsonAsync<dynamic>();
