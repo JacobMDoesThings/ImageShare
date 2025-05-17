@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'ImageShare.Functions/**'
   workflow_dispatch:
 
 env:
@@ -39,6 +41,13 @@ jobs:
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PROJECT_PATH }}'
           dotnet build './ImageShare.Functions.csproj' --configuration Release --output ./output
+          popd
+
+      - name: Run Unit Tests
+        shell: pwsh
+        run: |
+          pushd './ImageShare.Functions.Tests.Unit'
+          dotnet test --configuration Release
           popd
 
       - name: Login to Azure
